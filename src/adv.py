@@ -1,4 +1,5 @@
 from room import Room
+from player import Player
 
 # Declare all the rooms
 
@@ -39,6 +40,9 @@ room['treasure'].s_to = room['narrow']
 
 # Make a new player object that is currently in the 'outside' room.
 
+player = Player('outside')
+# print(player.room)
+
 # Write a loop that:
 #
 # * Prints the current room name
@@ -49,3 +53,57 @@ room['treasure'].s_to = room['narrow']
 # Print an error message if the movement isn't allowed.
 #
 # If the user enters "q", quit the game.
+
+pInput = ''
+currentRoom = player.room
+# print(room['outside'].description)
+# test = getattr(room[player.room], 'n_to').name
+# print(test)
+directionSet = set("neswq")
+# testInput = input("Choose a direction")
+# print(set(testInput).issubset(directionSet))
+switchedRooms = False
+
+while not pInput == 'q':
+    switchedRooms = False
+    if player.room == 'outside':
+        print("You are outside.")
+    else:
+        print(f"You are in the {currentRoom}\n")
+        print(f'{room[player.room].description}\n')
+    # print(room[player.room].description+'.')
+    pInput = input("Which direction would you like to move in? N, E, S, W? Press q to quit.\n")
+
+    while set(pInput).issubset(directionSet) == False:
+        pInput = input("Your input is not a valid cardinal direction. Which direction would you like to move in? N, E, S, W? Press q to quit.\n")
+
+    if pInput == 'q':
+        break
+    else:
+        pInput += '_to'
+    while switchedRooms == False:
+        try:
+            currentRoom = getattr(room[player.room], pInput).name
+            switchedRooms = True
+        except AttributeError:
+            print(switchedRooms)
+            pInput = input("You cannot move that way, please choose a different cardinal direction.\n")
+            pInput += '_to'
+
+    if currentRoom == "Outside Cave entrance":
+        player.room = 'outside'
+
+    elif currentRoom == 'Foyer':
+        player.room = 'foyer'
+
+    elif currentRoom == "Grand Overlook":
+        player.room = 'overlook'
+
+    elif currentRoom == "Narrow Passage":
+        player.room = 'narrow'
+
+    elif currentRoom == "Treasure Chamber":
+        player.room = 'treasure'
+    # print(player.room)
+    
+    
